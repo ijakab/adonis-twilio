@@ -1,0 +1,37 @@
+'use strict'
+const Twilio = use('Adonis/TwilioService')
+const User = use('App/Models/User')
+const validator = use('Validator')
+
+class ChatController {
+    async getToken({request, user}) {
+        return {token: await Twilio.generateToken(user.toJSON().id, request.all().deviceId)}
+    }
+
+    async createChat({request, user}) {
+        let params = request.only(['users', 'additional', 'name', 'type'])
+
+        let rules = {
+            users: 'array',
+            name: 'string|required',
+            type: 'string|required|in:public,private',
+            additional: 'string'
+        }
+        let validation = await validator.validate(params, rules)
+        if(validation.fails()) return validation.messages()
+
+        let data = {
+            friendlyName: params.name,
+            type: params.type
+        }
+        if(params.additional) data.attributes = params.additional
+        return await Twilio.createChat(data, user.toJSON().id, params.users)
+    }
+
+    async getPossibleActions({user, request}) {
+        return await Twilio.getPossibleActions(user.toJSON().id, request.get().sid)
+    }
+
+}
+
+module.exports = ChatController

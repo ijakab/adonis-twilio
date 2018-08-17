@@ -1,0 +1,24 @@
+{
+  "name": "adonis-twilio",
+  "version": "0.0.1",
+  "description": "Twilio provider for adnonis.js framework",
+  "main": "Providers/TwilioProvider.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ijakab/adonis-twilio.git"
+  },
+  "keywords": [
+    "twilio",
+    "adonis",
+    "node"
+  ],
+  "author": "Ivan Jakab",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ijakab/adonis-twilio/issues"
+  },
+  "homepage": "https://github.com/ijakab/adonis-twilio#readme"
+}

@@ -1,0 +1,43 @@
+'use strict'
+const Route = use('Route')
+
+module.exports = Route.group(() => {
+
+    /**
+    * @api {post} /chat/getToken Get token
+    * @apiGroup Chat
+    *
+    * @apiPermission JWT
+    *
+    * @apiDescription Get token to access twilio chat
+    *
+    */
+    Route.post('/getToken', 'ChatController.getToken').middleware(['getUser'])
+
+    /**
+    * @api {get} /chat/getPossibleActions Get Actions that can be performed by user
+    * @apiGroup Chat
+    *
+    * @apiPermission JWT
+    *
+    * @apiDescription Get token to access twilio chat
+    *
+    */
+    Route.get('/actions', 'ChatController.getPossibleActions').middleware(['getUser'])
+
+    /**
+    * @api {post} /chat/create Create chat
+    * @apiGroup Chat
+    *
+    * @apiPermission JWT
+    * @apiParam {string} Chat's name (rule: required|string)
+    * @apiParam {number[]} users Ids of users to add, not including creator
+    * @apiParam {string} type Chat type (rule: required|in:private,public)
+    * @apiParam {string} additional Additional data for chat (rule: string)
+    *
+    * @apiDescription Get token to access twilio chat
+    *
+    */
+    Route.post('/create', 'ChatController.createChat').middleware(['getUser'])
+
+})
