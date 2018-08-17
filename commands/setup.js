@@ -57,14 +57,14 @@ class SetupCommand extends Command {
     async generateController(name) {
         const templateFile = path.join(__dirname, './templates', `${name}.mustache`)
         const fileName = `${name}.js`
-        const filePath = Helpers.appRoot() + (`app/Controllers/${fileName}.js`)
+        const filePath = Helpers.appRoot() + (`/app/Controllers/Http/${fileName}`)
         await this.createFile(templateFile, filePath)
     }
 
     async generateRoutes(name) {
         const templateFile = path.join(__dirname, './templates', `${name}.mustache`)
         const fileName = `${name}.js`
-        const filePath = Helpers.appRoot() + (`app/Routes/${fileName}.js`)
+        const filePath = Helpers.appRoot() + (`/app/Routes/${fileName}`)
         await this.createFile(templateFile, filePath)
     }
 

@@ -27,7 +27,8 @@ class AclProvider extends ServiceProvider {
 
         //Traits
         this.app.bind('Adonis/Twilio/SyncTrait', () => {
-            return new require('../src/Traits/TwilioSync')()
+            let Trait = require('../src/Traits/TwilioSync')
+            return new Trait()
         })
     }
 
