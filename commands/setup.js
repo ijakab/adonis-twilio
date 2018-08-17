@@ -45,6 +45,7 @@ class SetupCommand extends Command {
         await this.generateFile(path, templateContents)
 
         const createdFile = path.replace(Helpers.appRoot(), '').replace(path.sep, '')
+        console.log('Created fle ' + path)
     }
 
     async generateBlueprint (name) {

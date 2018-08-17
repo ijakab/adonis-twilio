@@ -1,7 +1,7 @@
 'use strict'
 const { ServiceProvider } = require('@adonisjs/fold')
 
-class AclProvider extends ServiceProvider {
+class TwilioProvider extends ServiceProvider {
     register () {
         //Services
         this.app.bind('Adonis/TwilioService', () => {
@@ -36,4 +36,4 @@ class AclProvider extends ServiceProvider {
     }
 }
 
-module.exports = AclProvider
+module.exports = TwilioProvider
