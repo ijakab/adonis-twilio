@@ -14,6 +14,9 @@ class TwilioProvider extends ServiceProvider {
         this.app.bind('Adonis/Twilio/Chat', () => {
             return require('../src/Services/Adapters/Chat')
         })
+        this.app.bind('Adonis/Twilio/Video', () => {
+            return require('../src/Services/Adapters/Video')
+        })
         this.app.bind('Adonis/Twilio/BaseProducts', () => {
             return require('../src/Services/Adapters/BaseProduct')
         })

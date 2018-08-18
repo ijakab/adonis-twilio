@@ -9,10 +9,6 @@ class Chat extends BaseProduct {
     static client(appClient) {
         return appClient.chat.services(Env.get('TWILIO_SERVICE'))
     }
-
-    static async createUser(client, user) {
-        await client.users.create(user)
-    }
 }
 
 module.exports = Chat
