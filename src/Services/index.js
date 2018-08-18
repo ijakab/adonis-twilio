@@ -72,6 +72,10 @@ const TwilioService = {
         return await Chat.client(appClient).channels(sid).members.list()
     },
 
+    async getMember(sid, user_id) {
+        return await Chat.client(appClient).channels(sid).members(user_id)
+    },
+
     async getUserChats(user_id) {
         let user = await TwilioUser.findBy('user_id', user_id)
         let sid = user.toJSON().sid
