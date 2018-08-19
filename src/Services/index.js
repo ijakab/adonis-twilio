@@ -38,7 +38,7 @@ const TwilioService = {
             dateUpdated: new Date()
         }
         //add information about video chat
-        if(data.attributes) data.attributes = {}
+        if(!data.attributes) data.attributes = {}
         data.attributes.video = null
         data.attributes = JSON.stringify(data.attributes)
         Object.assign(config, data)

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e4f7740b-3617-458b-b72e-ab2c66d2dba2" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/src/Services/Adapters/Video.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/Adapters/Video.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Services/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/index.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -25,15 +26,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Services/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="72" column="6" lean-forward="true" selection-start-line="72" selection-start-column="6" selection-end-line="72" selection-end-column="6" />
+            <state relative-caret-position="378">
+              <caret line="40" column="12" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="12" />
               <folding>
                 <element signature="e#527#597#0" />
                 <element signature="e#643#916#0" />
-                <element signature="e#965#1449#0" />
                 <element signature="e#1500#1672#0" />
                 <element signature="e#1717#1960#0" />
                 <element signature="e#1993#2073#0" />
@@ -47,11 +47,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Video.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Video.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Services/Adapters/Video.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="25" column="38" lean-forward="true" selection-start-line="25" selection-start-column="38" selection-end-line="25" selection-end-column="38" />
+            <state relative-caret-position="289">
+              <caret line="26" column="59" selection-start-line="26" selection-start-column="59" selection-end-line="26" selection-end-column="59" />
             </state>
           </provider>
         </entry>
@@ -82,8 +82,8 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/Services/Adapters/Chat.js" />
         <option value="$PROJECT_DIR$/Providers/TwilioProvider.js" />
-        <option value="$PROJECT_DIR$/src/Services/Adapters/Video.js" />
         <option value="$PROJECT_DIR$/src/Services/index.js" />
+        <option value="$PROJECT_DIR$/src/Services/Adapters/Video.js" />
       </list>
     </option>
   </component>
@@ -100,7 +100,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-7" />
-    <option name="width" value="1124" />
+    <option name="width" value="1195" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -195,15 +195,15 @@
       <workItem from="1534506608037" duration="183000" />
       <workItem from="1534508548651" duration="906000" />
       <workItem from="1534588189016" duration="2081000" />
-      <workItem from="1534605601580" duration="6143000" />
+      <workItem from="1534605601580" duration="7925000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16263000" />
+    <option name="totallyTimeSpent" value="18045000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1124" height="1047" extended-state="0" />
+    <frame x="-7" y="0" width="1195" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.50630254" />
@@ -249,6 +249,11 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Providers/TwilioProvider.js">
@@ -366,21 +371,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Services/Adapters/Video.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="38" lean-forward="true" selection-start-line="25" selection-start-column="38" selection-end-line="25" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Services/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="72" column="6" lean-forward="true" selection-start-line="72" selection-start-column="6" selection-end-line="72" selection-end-column="6" />
+        <state relative-caret-position="378">
+          <caret line="40" column="12" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="12" />
           <folding>
             <element signature="e#527#597#0" />
             <element signature="e#643#916#0" />
-            <element signature="e#965#1449#0" />
             <element signature="e#1500#1672#0" />
             <element signature="e#1717#1960#0" />
             <element signature="e#1993#2073#0" />
@@ -390,6 +387,13 @@
             <element signature="e#3006#3022#0" />
             <element signature="e#2586#2682#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Services/Adapters/Video.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="26" column="59" selection-start-line="26" selection-start-column="59" selection-end-line="26" selection-end-column="59" />
         </state>
       </provider>
     </entry>
