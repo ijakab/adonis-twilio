@@ -53,7 +53,7 @@ Run migrations with
 
 1. *Add routes*
 
-Inside `start/kernel.js`
+Inside `start/routes.js`
 
 ```javascript
 _requireRoutes('Chat').prefix('chat')
