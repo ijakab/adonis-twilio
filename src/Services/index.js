@@ -77,7 +77,7 @@ const TwilioService = {
         let role = await Chat.client(appClient).roles(member.roleSid).fetch()
         return role.permissions
     },
-
+    
     getRoleSid(role_name) {
         return this.roles.find(role => role.friendlyName === `channel ${role_name}`).sid
     }
