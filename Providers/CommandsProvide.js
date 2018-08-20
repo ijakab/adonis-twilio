@@ -5,7 +5,7 @@ const { ServiceProvider } = require('@adonisjs/fold')
 
 class CommandsProvider extends ServiceProvider {
     register () {
-        this.app.bind('Adonis/Commands/Twilio:Setup', () => require('../commands/Setup'))
+        this.app.bind('Adonis/Commands/Twilio:Setup', () => require('../commands/setup'))
     }
 
     boot () {

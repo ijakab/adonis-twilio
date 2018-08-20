@@ -16,7 +16,7 @@ const providers = [
 
 const aceProviders = [
     //anything you have
-    'adonis-twilio-provider/Providers/CommandsProvider'
+    'adonis-twilio-provider/providers/CommandsProvider'
     //anything you have
 ]
 ```
