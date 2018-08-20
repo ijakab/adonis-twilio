@@ -8,6 +8,7 @@ module.exports = Route.group(() => {
     * @apiGroup Chat
     *
     * @apiPermission JWT
+    * @apiParam {string} deviceId something that twilio wants, anything
     *
     * @apiDescription Get token to access twilio chat
     *
@@ -15,29 +16,53 @@ module.exports = Route.group(() => {
     Route.post('/getToken', 'ChatController.getToken').middleware(['getUser'])
 
     /**
-    * @api {get} /chat/getPossibleActions Get Actions that can be performed by user
+    * @api {get} /chat/:sid/actions Get Actions that can be performed by user
     * @apiGroup Chat
     *
     * @apiPermission JWT
     *
-    * @apiDescription Get token to access twilio chat
+    * @apiDescription Get Actions that can be performed by user
     *
     */
-    Route.get('/actions', 'ChatController.getPossibleActions').middleware(['getUser'])
+    Route.get('/:sid/actions', 'ChatController.getPossibleActions').middleware(['getUser'])
 
     /**
     * @api {post} /chat/create Create chat
     * @apiGroup Chat
     *
     * @apiPermission JWT
-    * @apiParam {string} Chat's name (rule: required|string)
+    * @apiParam {string} name Chat's name (rule: required|string)
     * @apiParam {number[]} users Ids of users to add, not including creator
     * @apiParam {string} type Chat type (rule: required|in:private,public)
     * @apiParam {string} additional Additional data for chat (rule: string)
     *
-    * @apiDescription Get token to access twilio chat
+    * @apiDescription Create a new chat
     *
     */
     Route.post('/create', 'ChatController.createChat').middleware(['getUser'])
+
+    /**
+    * @api {post} /chat/:sid/video Add video
+    * @apiGroup Chat
+    *
+    * @apiPermission JWT
+    * @apiParam {string} sid Sid of chat
+    *
+    * @apiDescription Add video to chat
+    *
+    */
+    Route.post('/:sid/video', 'ChatController.addVideo').middleware(['getUser'])
+
+    /**
+    * @api {delete} /chat/:sid/video Remove video
+    * @apiGroup Chat
+    *
+    * @apiPermission JWT
+    * @apiParam {string} sid Sid of chat
+    *
+    * @apiDescription Remove video call from chat
+    *
+    */
+    Route.delete('/:sid/video', 'ChatController.removeVideo').middleware(['getUser'])
 
 })

@@ -1,7 +1,7 @@
 const Env = use('Env')
 const BaseProduct = use('Adonis/Twilio/BaseProducts')
 
-class Chat extends BaseProduct {
+class Video extends BaseProduct {
     constructor() {
         super()
     }
@@ -34,4 +34,4 @@ class Chat extends BaseProduct {
     }
 }
 
-module.exports = Chat
+module.exports = Video

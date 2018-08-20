@@ -14,8 +14,7 @@ class ChatController {
         let rules = {
             users: 'array',
             name: 'string|required',
-            type: 'string|required|in:public,private',
-            additional: 'string'
+            type: 'string|required|in:public,private'
         }
         let validation = await validator.validate(params, rules)
         if(validation.fails()) return validation.messages()
@@ -30,6 +29,18 @@ class ChatController {
 
     async getPossibleActions({user, request}) {
         return await Twilio.getPossibleActions(user.toJSON().id, request.get().sid)
+    }
+
+    async addVideo({user, request, response}) {
+        let sid = request.all().sid
+        if(!await Twilio.getMember(sid, user.toJSON().id)) return response.forbidden('error.notOnChat')
+        return await Twilio.addVideoToChat(sid)
+    }
+
+    async removeVideo({user, request, response}) {
+        let sid = request.all().sid
+        if(!await Twilio.getMember(sid, user.toJSON().id)) return response.forbidden('error.notOnChat')
+        return await Twilio.endVideoOnChat(sid)
     }
 
 }
