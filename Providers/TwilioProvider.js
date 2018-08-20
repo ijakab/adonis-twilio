@@ -28,6 +28,24 @@ class TwilioProvider extends ServiceProvider {
             return Model
         })
 
+        this.app.bind('Adonis/Twilio/UserChat', () => {
+            let Model = require('../src/Models/UserChat')
+            Model._bootIfNotBooted()
+            return Model
+        })
+
+        this.app.bind('Adonis/Twilio/Chat', () => {
+            let Model = require('../src/Models/TwilioChat')
+            Model._bootIfNotBooted()
+            return Model
+        })
+
+        this.app.bind('Adonis/Twilio/Invites', () => {
+            let Model = require('../src/Models/')
+            Model._bootIfNotBooted()
+            return Model
+        })
+
         //Traits
         this.app.bind('Adonis/Twilio/SyncTrait', () => {
             let Trait = require('../src/Traits/TwilioSync')

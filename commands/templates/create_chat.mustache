@@ -1,0 +1,20 @@
+'use strict'
+
+const Schema = use('Schema')
+
+class TwilioChat extends Schema {
+    up () {
+        this.create('twilio_chats', (table) => {
+            table.increments()
+            table.string('chat_sid').notNullable()
+            table.string('title').notNullable()
+            table.timestamps()
+        })
+    }
+
+    down () {
+    this.drop('twilio_users')
+    }
+}
+
+module.exports = TwilioChat

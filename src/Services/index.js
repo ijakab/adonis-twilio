@@ -7,6 +7,10 @@ const AccessToken = require('twilio').jwt.AccessToken
 const ChatGrant = AccessToken.ChatGrant
 
 const TwilioUser = use('Adonis/Twilio/TwilioUser')
+const UserChat = use('Adonis/Twilio/UserChat')
+const ChatLocal = use('Adonis/Twilio/Chat')
+const Invites = use('Adonis/Twilio/Invites')
+const User = use('App/Models/User')
 
 const Chat = use('Adonis/Twilio/Chat')
 const Video = use('Adonis/Twilio/Video')
@@ -17,7 +21,15 @@ const TwilioService = {
     },
 
     async createUser(data) {
-        return await Chat.client(appClient).users.create(data)
+        let res = await Chat.client(appClient).users.create({
+            identity: data.id,
+            friendlyName: data.friendlyName
+        })
+        await TwilioUser.create({
+            user_id: data.id,
+            sid: res.sid
+        })
+        return res
     },
 
     async generateToken(user_id, deviceId) {
@@ -44,48 +56,92 @@ const TwilioService = {
         Object.assign(config, data)
         let chat = await Chat.client(appClient).channels.create(config)
         await this.addToChat(chat.sid, creator_id, 'admin')
+
+        //Add locally
+        let record = await ChatLocal.create({
+            chat_sid: chat.sid,
+            title: chat.friendlyName
+        })
+        record = record.toJSON()
+
         if(users) {
             for(let user_id of users) {
-                await this.addToChat(chat.sid, user_id, 'user')
+                await this.addToChat(record.id, user_id, 'user')
             }
         }
+
         return chat
     },
 
-    async inviteToChat(sid, user_id, role_name) {
+    async inviteToChat(chat_id, user_id, role_name) {
+        let sid = (await ChatLocal.find(chat_id)).toJSON().sid
+
+        await Invites.create({
+            user_id,
+            chat_id: id
+        })
+
         return await Chat.client(appClient).channels(sid).invites.create({
             identity: user_id,
             roleSid: this.getRoleSid(role_name)
         })
     },
 
-    async addToChat(sid, user, role_name) {
+    async acceptInvite(chat_id, user_id) {
+        let record = await Invites.query()
+            .where('user_id', user_id)
+            .where('chat_id', chat_id)
+            .fetch()
+        if(!record) return
+        await UserChat.create({
+            user_id: user_id,
+            chat_id: chat_id
+        })
+        await Invites.query().where('id', record.toJSON().id).delete()
+    },
+
+    async addToChat(chat_id, user_id, role_name) {
+        let sid = (await ChatLocal.find(chat_id)).toJSON().sid
+        await UserChat.create({
+            user_id: user_id,
+            chat_id: chat_id
+        })
         return await Chat.client(appClient).channels(sid).members.create({
-            identity: user,
+            identity: user_id,
             dateCreated: new Date(),
             dateUpdated: new Date(),
             roleSid: this.getRoleSid(role_name)
         })
     },
 
-    async getChatMembers(sid) {
-        return await Chat.client(appClient).channels(sid).members.list()
+    async removeFromChat(chat_id, user_id) {
+        let sid = (await ChatLocal.find(chat_id)).toJSON().sid
+        await Chat.client(appClient).channels(sid).members(user_id).remove()
+        await UserChat.query()
+            .where('chat_id', chat_id)
+            .where('user_id', user_id)
+        await Invites.query()
+            .where('chat_id', chat_id)
+            .where('user_id', user_id)
     },
 
-    async getMember(sid, user_id) {
-        return await Chat.client(appClient).channels(sid).members(user_id)
+    ChatMembersQuery(chat_id) {
+        return User.query()
+            .with('twilio_user', tusers => {
+                tusers.with('chats', chats => {
+                    chats.where('id', chat_id)
+                })
+            })
     },
 
-    async getUserChats(user_id) {
-        let user = await TwilioUser.findBy('user_id', user_id)
-        let sid = user.toJSON().sid
-        return await Chat.client(appClient).users(sid).userChannels.list()
-    },
-
-    async getPossibleActions(user_id, channel_sid) {
-        let member = await Chat.client(appClient).channels(channel_sid).members(user_id).fetch()
-        let role = await Chat.client(appClient).roles(member.roleSid).fetch()
-        return role.permissions
+    UserChatsQuery(user_id) {
+        return User.query()
+            .where('id', user_id)
+            .with('twilio_user', tuser => {
+                tusers.with('chats', chats => {
+                    chats.with('users.user')
+                })
+            })
     },
 
     async addVideoToChat(sid) {
