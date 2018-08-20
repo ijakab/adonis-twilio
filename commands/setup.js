@@ -83,6 +83,9 @@ class SetupCommand extends Command {
     async handle () {
         try {
             await this.generateBlueprint('create_twilio_user')
+            await this.generateBlueprint('create_chat')
+            await this.generateBlueprint('create_invites')
+            await this.generateBlueprint('create_user_chat')
             await this.generateController('ChatController')
             await this.generateRoutes('Chat')
         } catch ({ message }) {
