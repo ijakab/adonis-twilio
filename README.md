@@ -20,6 +20,12 @@ const aceProviders = [
     //anything you have
 ]
 ```
+1. *Add relation to user model*
+```javascript
+twilio_user() {
+    return this.hasOne('Adonis/Twilio/TwilioUser')
+}
+```
 1. *Add trait to your user model*
 Inside UserModel file (probably `app/Models/User.js`)
 ```javascript
