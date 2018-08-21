@@ -107,8 +107,8 @@ const TwilioService = {
                 user_id: user_id,
                 chat_id: chat_id
             }).first()
-        ) throw 'error.memberExists'
-        if(!(await User.find(user_id))) throw 'error.noUser'
+        ) throw {message: 'error.memberExist'}
+        if(!(await User.find(user_id))) throw {message: 'error.noUser'}
         await UserChat.create({
             user_id: user_id,
             chat_id: chat_id
