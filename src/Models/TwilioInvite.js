@@ -5,7 +5,7 @@ const Model = use('Model')
 class UserChat extends Model {
 
     static get table() {
-        return 'twilio_user_chat'
+        return 'twilio_invites'
     }
 
     //Relations

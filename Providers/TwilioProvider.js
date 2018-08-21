@@ -34,7 +34,7 @@ class TwilioProvider extends ServiceProvider {
             return Model
         })
 
-        this.app.bind('Adonis/Twilio/Chat', () => {
+        this.app.bind('Adonis/Twilio/ChatLocal', () => {
             let Model = require('../src/Models/TwilioChat')
             Model._bootIfNotBooted()
             return Model
