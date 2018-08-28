@@ -5,7 +5,7 @@ const validator = use('Validator')
 class ChatController {
     async getToken({request, response, user}) {
 
-        const deviceId = request.body().devideId
+        const deviceId = request.body().deviceId
         if(!deviceId) return response.badRequest('chat.error.noDeviceId')
 
         const token = await Twilio.generateToken(user.id, deviceId)
