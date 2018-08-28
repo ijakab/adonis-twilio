@@ -23,5 +23,9 @@
   "homepage": "https://github.com/ijakab/adonis-twilio#readme",
   "dependencies": {
     "twilio": "^3.19.2"
+  },
+  "devDependencies": {
+    "@adonisjs/fold": "^4.0.9",
+    "@adonisjs/sink": "^1.0.16"
   }
 }

@@ -10,13 +10,13 @@ Inside `start/app.js`
 ```javascript
 const providers = [
     //anything you have
-    'adonis-twilio-provider/providers/TwilioProvider'
+    'adonis-twilio-provider/Providers/TwilioProvider'
     //anything you have
 ]
 
 const aceProviders = [
     //anything you have
-    'adonis-twilio-provider/providers/CommandsProvider'
+    'adonis-twilio-provider/Providers/CommandsProvider'
     //anything you have
 ]
 ```
@@ -33,6 +33,17 @@ static get traits() {
     return [
         '@provider:Adonis/Twilio/SyncTrait'
     ]
+}
+```
+1. *Add computed property to your user model*
+Inside UserModel file (probably `app/Models/User.js`)
+```javascript
+static get computed () {
+    return ['twilioName']
+}
+
+getTwilioName ({ firstname, lastname }) {
+    return `${firstname} ${lastname}`
 }
 ```
 1. *Setup database*
