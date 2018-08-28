@@ -1,46 +1,54 @@
 'use strict'
 const Twilio = use('Adonis/TwilioService')
-const User = use('App/Models/User')
 const validator = use('Validator')
 
 class ChatController {
-    async getToken({request, user}) {
-        return {token: await Twilio.generateToken(user.toJSON().id, request.all().deviceId)}
+    async getToken({request, response, user}) {
+
+        const deviceId = request.body().devideId
+        if(!deviceId) return response.badRequest('chat.error.noDeviceId')
+
+        const token = await Twilio.generateToken(user.id, deviceId)
+        response.ok({token})
     }
 
-    async createChat({request, user}) {
-        let params = request.only(['users', 'additional', 'name', 'type'])
+    async createChat({request, response, user}) {
+        let allParams = request.only(['users', 'additional', 'name', 'type'])
 
         let rules = {
             users: 'array',
             name: 'string|required',
             type: 'string|required|in:public,private'
         }
-        let validation = await validator.validate(params, rules)
-        if(validation.fails()) return validation.messages()
+        let validation = await validator.validate(allParams, rules)
+        if(validation.fails()) return response.badRequest(validation.messages())
 
         let data = {
-            friendlyName: params.name,
-            type: params.type
+            friendlyName: allParams.name,
+            type: allParams.type
         }
-        if(params.additional) data.attributes = params.additional
-        return await Twilio.createChat(data, user.toJSON().id, params.users)
+        if(allParams.additional) data.attributes = allParams.additional
+
+        const chatData = await Twilio.createChat(data, user.id, allParams.users)
+
+        response.ok(chatData)
     }
 
-    async getPossibleActions({user, request}) {
-        return await Twilio.getPossibleActions(user.toJSON().id, request.get().sid)
+    async getPossibleActions({request, response, params, user}) {
+
+        const possibleActions = await Twilio.getPossibleActions(user.id, params.sid)
+
+        response.ok(possibleActions)
     }
 
-    async addVideo({user, request, response}) {
-        let sid = request.all().sid
-        if(!await Twilio.getMember(sid, user.toJSON().id)) return response.forbidden('error.notOnChat')
-        return await Twilio.addVideoToChat(sid)
+    async addVideo({request, response, params, user}) {
+        if (!await Twilio.getMember(params.sid, user.id)) return response.forbidden('chat.error.notOnChat')
+        return await Twilio.addVideoToChat(params.sid)
     }
 
-    async removeVideo({user, request, response}) {
-        let sid = request.all().sid
-        if(!await Twilio.getMember(sid, user.toJSON().id)) return response.forbidden('error.notOnChat')
-        return await Twilio.endVideoOnChat(sid)
+    async removeVideo({request, response, params, user}) {
+        if (!await Twilio.getMember(params.sid, user.id)) return response.forbidden('chat.error.notOnChat')
+        return await Twilio.endVideoOnChat(params.sid)
     }
 
 }

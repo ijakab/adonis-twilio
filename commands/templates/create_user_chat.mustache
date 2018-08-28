@@ -6,8 +6,8 @@ class TwilioUserChat extends Schema {
     up () {
         this.create('twilio_user_chats', (table) => {
             table.increments()
-            table.integer('user_id').notNullable()
-            table.integer('chat_id').notNullable()
+            table.integer('user_id').unsigned().notNullable()
+            table.integer('chat_id').unsigned().notNullable()
             table.timestamps()
         })
     }
