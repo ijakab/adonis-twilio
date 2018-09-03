@@ -16,6 +16,11 @@ const Chat = use('Adonis/Twilio/Chat')
 const Video = use('Adonis/Twilio/Video')
 
 const TwilioService = {
+
+    getClient() {
+        return Chat.client(appClient)
+    },
+
     async init() {
         this.roles = await Chat.client(appClient).roles.list()
     },
@@ -50,7 +55,7 @@ const TwilioService = {
             dateUpdated: new Date()
         }
         //add information about video chat
-        if(!data.attributes) data.attributes = {}
+        if (!data.attributes) data.attributes = {}
         else data.attributes = JSON.parse(data.attributes)
         data.attributes.video = null
         data.attributes = JSON.stringify(data.attributes)
@@ -64,8 +69,8 @@ const TwilioService = {
         record = record.toJSON()
 
         await this.addToChat(record.id, creator_id, 'admin')
-        if(users) {
-            for(let user_id of users) {
+        if (users) {
+            for (let user_id of users) {
                 await this.addToChat(record.id, user_id, 'user')
             }
         }
@@ -92,7 +97,7 @@ const TwilioService = {
             .where('user_id', user_id)
             .where('chat_id', chat_id)
             .first()
-        if(!record) return
+        if (!record) return
         await UserChat.create({
             user_id: user_id,
             chat_id: chat_id
@@ -102,13 +107,13 @@ const TwilioService = {
 
     async addToChat(chat_id, user_id, role_name) {
         let sid = (await ChatLocal.find(chat_id)).toJSON().chat_sid
-        if(
+        if (
             await UserChat.query().where({
                 user_id: user_id,
                 chat_id: chat_id
             }).first()
         ) throw {message: 'error.memberExist'}
-        if(!(await User.find(user_id))) throw {message: 'error.noUser'}
+        if (!(await User.find(user_id))) throw {message: 'error.noUser'}
         await UserChat.create({
             user_id: user_id,
             chat_id: chat_id

@@ -6,7 +6,7 @@ class TwilioUserSchema extends Schema {
     up () {
         this.create('twilio_users', (table) => {
         table.increments()
-        table.integer('user_id').notNullable().unique()
+        table.integer('user_id').unsigned().notNullable().unique()
         table.string('sid').notNullable()
         table.timestamps()
     })
