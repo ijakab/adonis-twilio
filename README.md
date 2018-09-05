@@ -167,4 +167,9 @@ await ChatLocal.query()
 ```
 Note that to access users, we go chat.users.user, because Chat has many users (twilio users, added by this provider) and those have one user (your user)
 
+### Commands
+
+`adonis twilio:setup` Adds migration to your project
+`adonis twilio:tools` Tools for syncing existing users to twilio and removing all users. Follow the instruction
+
 More information soon
