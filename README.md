@@ -125,6 +125,7 @@ Twilio.methodName(inputs)
 ```
 
 | Method name | Inputs | Return | Description |
+| ----------- | ------ | ------ | ----------- |
 | createUser | object containing attribute *id* matching your user id and friendlyName | Twilio response | Call this to sync user. *You probably don't need this method* if you registered twilioSync trait to user model. For existing user call twilio:tools command |
 | generateToken | *user_id* id of user, *deviceId* can be anything | token | Your front-end will need this token to connect to twilio |
 | createChat | *data* any data twilio supports, *creator_id* id of user who created chat, *users* ids of users to add to chat, *not including creator* | Twilio response | Call this to create a new chat |
