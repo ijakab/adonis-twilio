@@ -170,6 +170,7 @@ Note that to access users, we go chat.users.user, because Chat has many users (t
 ### Commands
 
 `adonis twilio:setup` Adds migration to your project
+
 `adonis twilio:tools` Tools for syncing existing users to twilio and removing all users. Follow the instruction
 
 More information soon
