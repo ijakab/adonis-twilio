@@ -55,20 +55,6 @@ class SetupCommand extends Command {
         await this.createFile(templateFile, filePath)
     }
 
-    async generateController(name) {
-        const templateFile = path.join(__dirname, './templates', `${name}.mustache`)
-        const fileName = `${name}.js`
-        const filePath = Helpers.appRoot() + (`/app/Controllers/Http/${fileName}`)
-        await this.createFile(templateFile, filePath)
-    }
-
-    async generateRoutes(name) {
-        const templateFile = path.join(__dirname, './templates', `${name}.mustache`)
-        const fileName = `${name}.js`
-        const filePath = Helpers.appRoot() + (`/app/Routes/${fileName}`)
-        await this.createFile(templateFile, filePath)
-    }
-
     /**
      * The handle method to be executed
      * when running command
@@ -86,8 +72,6 @@ class SetupCommand extends Command {
             await this.generateBlueprint('create_chat')
             await this.generateBlueprint('create_invites')
             await this.generateBlueprint('create_user_chat')
-            await this.generateController('ChatController')
-            await this.generateRoutes('Chat')
         } catch ({ message }) {
             this.error(message)
         }
