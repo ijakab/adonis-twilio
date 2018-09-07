@@ -7,7 +7,7 @@ class Chat extends BaseProduct {
     }
 
     static client(appClient) {
-        return appClient.chat.services(Env.get('TWILIO_SERVICE'))
+        return appClient.chat.services(Env.get('TWILIO_SERVICE_SID'))
     }
 }
 
