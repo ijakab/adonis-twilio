@@ -127,7 +127,7 @@ Twilio.methodName(inputs)
 | Method name | Inputs | Return | Description |
 | ----------- | ------ | ------ | ----------- |
 | createUser | object containing attribute *id* matching your user id and friendlyName | Twilio response | Call this to sync user. *You probably don't need this method* if you registered twilioSync trait to user model. For existing user call twilio:tools command |
-| generateToken | *user_id* id of user, *deviceId* can be anything | token | Your front-end will need this token to connect to twilio |
+| generateToken | `user_id` id of user, `endpointId` from font-end | token | Your front-end will need this token to connect to twilio |
 | createChat | *data* any data twilio supports, *creator_id* id of user who created chat, *users* ids of users to add to chat, *not including creator* | Twilio response | Call this to create a new chat |
 | addToChat | *chat_id* your local id of chat (not twilio sid), *user_id* id of user to add, *role_name* name of twilio role. You probably want to add everyone as 'user' since you need your acl, but you can add admins if you want | Twilio response | Call this to add users to chat
 | removeFromChat | *chat_id* your local id of chat (not twilio sid), *user_id* id of user to remove | void | Removes user from chat |

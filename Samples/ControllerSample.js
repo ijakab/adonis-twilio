@@ -6,7 +6,7 @@ const validator = use('Validator')
 
 class ChatController {
     async getToken({request, user}) {
-        return {token: await Twilio.generateToken(user.toJSON().id, request.all().deviceId)}
+        return {token: await Twilio.generateToken(user.toJSON().id, request.input('endpointId'))}
     }
 
     async createChat({request, user}) { //todo: check if users exist

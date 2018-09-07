@@ -1,8 +1,11 @@
 const Env = use('Env')
-const sid = Env.get('TWILIO_ACCOUNT_SID')
+const account_sid = Env.get('TWILIO_ACCOUNT_SID')
 const api_key = Env.get('TWILIO_TOKEN')
-const api_secret = Env.get('TWILIO_SECRET')
-const appClient = require('twilio')(sid, api_key)
+const api_key_sid = Env.get('TWILIO_API_KEY_SID')
+const api_key_secret = Env.get('TWILIO_API_KEY_SECRET')
+const service_sid = Env.get('TWILIO_SERVICE_SID')
+
+const appClient = require('twilio')(account_sid, api_key)
 const AccessToken = require('twilio').jwt.AccessToken
 const ChatGrant = AccessToken.ChatGrant
 
@@ -37,14 +40,13 @@ const TwilioService = {
         return res
     },
 
-    async generateToken(user_id, deviceId) {
-        const token = new AccessToken(sid, api_key, api_secret)
-        token.addGrant(new ChatGrant({
-            serviceSid: sid,
-            endpointId: `TwilioChat:${user_id}:${deviceId}`
-        }))
-        token.addGrant(new AccessToken.VideoGrant())
-        token.identity = user_id
+    async generateToken(user_id, endpointId) {
+        const token = new AccessToken(account_sid, api_key_sid, api_key_secret)
+        let grant = new ChatGrant()
+        grant.serviceSid = service_sid
+        grant.endpointId = service_sid + user_id + endpointId
+        token.addGrant(grant)
+        //token.addGrant(new AccessToken.VideoGrant())
         return token.toJwt()
     },
 
