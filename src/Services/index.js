@@ -48,7 +48,7 @@ const TwilioService = {
         grant.endpointId = service_sid + user_id + endpointId
         token.addGrant(grant)
 		token.identity = user_id + ''
-        //token.addGrant(new AccessToken.VideoGrant())
+        token.addGrant(new AccessToken.VideoGrant())
         return token.toJwt()
     },
 
