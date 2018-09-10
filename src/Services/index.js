@@ -79,7 +79,7 @@ const TwilioService = {
             }
         }
 
-        return chat
+        return {record, chat}
     },
 
     async inviteToChat(chat_id, user_id, role_name) {
