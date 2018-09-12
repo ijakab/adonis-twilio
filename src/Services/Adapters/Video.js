@@ -1,5 +1,6 @@
 const Env = use('Env')
 const BaseProduct = use('Adonis/Twilio/BaseProducts')
+const ChatLocal = use('Adonis/Twilio/ChatLocal')
 
 class Video extends BaseProduct {
     constructor() {
@@ -19,6 +20,11 @@ class Video extends BaseProduct {
             sid: room.sid
         }
         await chatClient.channels(sid).update(attributes => JSON.stringify(channel.attributes))
+        await ChatLocal.query()
+            .where('chat_sid', sid)
+            .update({
+                video_sid: room.sid
+            })
         return room
     }
 
@@ -30,6 +36,11 @@ class Video extends BaseProduct {
             channel.attributes.video = null
             await chatClient.channels(sid).update(attributes => JSON.stringify(channel.attributes))
         }
+        await ChatLocal.query()
+            .where('chat_sid', sid)
+            .update({
+                video_sid: null
+            })
         return channel
     }
 }

@@ -7,13 +7,14 @@ class TwilioChat extends Schema {
         this.create('twilio_chats', (table) => {
             table.increments()
             table.string('chat_sid').notNullable()
+            table.string('video_sid')
             table.string('title').notNullable()
             table.timestamps()
         })
     }
 
     down () {
-    this.drop('twilio_users')
+        this.drop('twilio_users')
     }
 }
 
