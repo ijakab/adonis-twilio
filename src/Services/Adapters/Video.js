@@ -19,7 +19,7 @@ class Video extends BaseProduct {
             unique_name: room.unique_name,
             sid: room.sid
         }
-        await chatClient.channels(sid).update(attributes => JSON.stringify(channel.attributes))
+        await chatClient.channels(sid).update({attributes: JSON.stringify(channel.attributes)})
         await ChatLocal.query()
             .where('chat_sid', sid)
             .update({
@@ -34,7 +34,7 @@ class Video extends BaseProduct {
         if(channel.attributes.video) {
             await videoClient.rooms(channel.attributes.video.sid).update({status: 'completed'})
             channel.attributes.video = null
-            await chatClient.channels(sid).update(attributes => JSON.stringify(channel.attributes))
+            await chatClient.channels(sid).update({attributes: JSON.stringify(channel.attributes)})
         }
         await ChatLocal.query()
             .where('chat_sid', sid)
