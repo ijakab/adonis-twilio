@@ -41,7 +41,11 @@ const TwilioService = {
     },
 
     async createUserIfNotExist(data) {
-        let existing = await Chat.client(appClient).users(data.email).fetch()
+        try {
+            await Chat.client(appClient).users(data.id).fetch()
+        } catch (e) {
+            await this.createUser(data)
+        }
     },
 
     async generateToken(user_id, endpointId) {
