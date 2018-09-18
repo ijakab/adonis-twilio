@@ -90,6 +90,19 @@ const TwilioService = {
         return {record, chat}
     },
 
+    async removeChat(id) {
+        let chat = await ChatLocal.find(id)
+        try {
+            await this.endVideoOnChat(chat.sid)
+        } catch (e) {}
+        try {
+            await Chat.client(appClient).channels(chat.sid).remove()
+        } catch(e) {}
+        try {
+            await ChatLocal.delete()
+        } catch (e) {}
+    },
+
     async inviteToChat(chat_id, user_id, role_name) {
         let sid = (await ChatLocal.find(chat_id)).toJSON().chat_sid
 
