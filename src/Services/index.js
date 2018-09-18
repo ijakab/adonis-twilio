@@ -30,6 +30,7 @@ const TwilioService = {
 
     async createUser(data) {
         let res = await Chat.client(appClient).users.create({
+            //
             identity: data.id,
             friendlyName: data.friendlyName
         })
