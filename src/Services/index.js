@@ -30,7 +30,7 @@ const TwilioService = {
 
     async createUser(data) {
         let res = await Chat.client(appClient).users.create({
-            identity: data.id,
+            identity: data.email,
             friendlyName: data.friendlyName
         })
         await TwilioUser.create({
@@ -38,6 +38,10 @@ const TwilioService = {
             sid: res.sid
         })
         return res
+    },
+
+    async createUserIfNotExist(data) {
+        let existing = await Chat.client(appClient).users('')
     },
 
     async generateToken(user_id, endpointId) {
@@ -143,8 +147,8 @@ const TwilioService = {
             .delete()
     },
 
-    async addVideoToChat(sid) {
-        return await Video.addToChat(Video.client(appClient), Chat.client(appClient), sid)
+    async addVideoToChat(sid, data) {
+        return await Video.addToChat(Video.client(appClient), Chat.client(appClient), sid, data)
     },
 
     async endVideoOnChat(sid) {

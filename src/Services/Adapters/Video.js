@@ -11,8 +11,11 @@ class Video extends BaseProduct {
         return appClient.video
     }
 
-    static async addToChat(videoClient, chatClient, sid, name) {
-        let room = await videoClient.rooms.create({uniqueName: name, type: 'group'})
+    static async addToChat(videoClient, chatClient, sid, data) {
+        let room = await videoClient.rooms.create({
+            ...data,
+            type: 'group'
+        })
         let channel = await chatClient.channels(sid).fetch()
         channel.attributes = JSON.parse(channel.attributes)
         channel.attributes.video = {
