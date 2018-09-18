@@ -61,9 +61,9 @@ const TwilioService = {
         return token.toJwt()
     },
 
-    async createChat(data, creator_id, users) {
+    async createChat(data, creator) {
         let config = {
-            createdBy: creator_id,
+            createdBy: creator.id,
             dateCreated: new Date(),
             dateUpdated: new Date()
         }
@@ -81,12 +81,7 @@ const TwilioService = {
         })
         record = record.toJSON()
 
-        await this.addToChat(record.id, creator_id, 'admin')
-        if (users) {
-            for (let user_id of users) {
-                await this.addToChat(record.id, user_id, 'user')
-            }
-        }
+        await this.addToChat(record.id, creator, 'admin')
 
         return {record, chat}
     },
