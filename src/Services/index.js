@@ -24,13 +24,16 @@ const TwilioService = {
         return Chat.client(appClient)
     },
 
+    getVideoClient() {
+        return Video.client(appClient)
+    },
+
     async init() {
         this.roles = await Chat.client(appClient).roles.list()
     },
 
     async createUser(data) {
         let res = await Chat.client(appClient).users.create({
-            //
             identity: data.id,
             friendlyName: data.friendlyName
         })
@@ -43,7 +46,7 @@ const TwilioService = {
 
     async createUserIfNotExist(data) {
         try {
-            await Chat.client(appClient).users(data.id).fetch()
+            await TwilioUser.findByOrFail('user_id', data.id)
         } catch (e) {
             await this.createUser(data)
         }
@@ -61,12 +64,27 @@ const TwilioService = {
         return token.toJwt()
     },
 
-    async createChat(data, creator) {
+    async createChat(data, creator, users) {
         let config = {
             createdBy: creator.id,
             dateCreated: new Date(),
             dateUpdated: new Date()
         }
+
+        //first, check if chat with those users exist
+        let ids = users.map(user => user.id)
+        ids.push(creator.id)
+        let record = await ChatLocal
+            .query()
+            .whereHas('users', q => {
+                q.whereIn('user_id', ids)
+            }, '=', ids.length)
+            .first()
+        if(exists) {
+            let chat = await Chat.client(appClient).channels.fetch()
+            return {record, chat}
+        }
+
         //add information about video chat
         if (!data.attributes) data.attributes = {}
         else data.attributes = JSON.parse(data.attributes)
@@ -74,14 +92,21 @@ const TwilioService = {
         data.attributes = JSON.stringify(data.attributes)
         Object.assign(config, data)
 
-        let chat = await Chat.client(appClient).channels.create(config)
-        let record = await ChatLocal.create({
+        //to speed up, we need to do things in parallel
+        let promises = users.map(user => this.createUserIfNotExist(user))
+        promises.push(this.createUserIfNotExist(creator))
+        promises.push(Chat.client(appClient).channels.create(config))
+        let chat = await Promise.all(promises)[ids.length] //index of create chat promise is equal to number of users, or number of promises before it
+
+        record = await ChatLocal.create({
             chat_sid: chat.sid,
             title: chat.friendlyName
         })
         record = record.toJSON()
 
-        await this.addToChat(record.id, creator, 'admin')
+        //we also add users in parallel
+        promises = users.map(user => this.addToChat(record.id, user.id, 'user'))
+        promises.push(this.addToChat(record.id, creator, 'admin'))
 
         return {record, chat}
     },
@@ -128,23 +153,19 @@ const TwilioService = {
 
     async addToChat(chat_id, user_id, role_name) {
         let sid = (await ChatLocal.find(chat_id)).toJSON().chat_sid
-        if (
-            await UserChat.query().where({
+        let promises = [
+            UserChat.create({
                 user_id: user_id,
                 chat_id: chat_id
-            }).first()
-        ) throw {message: 'error.memberExist'}
-        if (!(await User.find(user_id))) throw {message: 'error.noUser'}
-        await UserChat.create({
-            user_id: user_id,
-            chat_id: chat_id
-        })
-        return await Chat.client(appClient).channels(sid).members.create({
-            identity: user_id,
-            dateCreated: new Date(),
-            dateUpdated: new Date(),
-            roleSid: this.getRoleSid(role_name)
-        })
+            }),
+            Chat.client(appClient).channels(sid).members.create({
+                identity: user_id,
+                dateCreated: new Date(),
+                dateUpdated: new Date(),
+                roleSid: this.getRoleSid(role_name)
+            })
+        ]
+        return await Promise.all(promises)[1]
     },
 
     async removeFromChat(chat_id, user_id) {
