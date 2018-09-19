@@ -1,6 +1,6 @@
 {
   "name": "adonis-twilio-provider",
-  "version": "0.41.0",
+  "version": "0.42.0",
   "description": "Twilio provider for adnonis.js framework",
   "main": "Providers/TwilioProvider.js",
   "scripts": {
