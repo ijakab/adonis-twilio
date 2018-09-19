@@ -11,22 +11,20 @@ class Video extends BaseProduct {
         return appClient.video
     }
 
-    static async addToChat(videoClient, chatClient, sid, data) {
-        data.type = 'group'
-        let room = await videoClient.rooms.create(data)
-        let channel = await chatClient.channels(sid).fetch()
-        channel.attributes = JSON.parse(channel.attributes)
-        channel.attributes.video = {
-            unique_name: room.unique_name,
-            sid: room.sid
+    static async createChat({request, user}) {
+        let data = {
+            friendlyName: "glupost",
+            type: "private"
         }
-        await chatClient.channels(sid).update({attributes: JSON.stringify(channel.attributes)})
-        await ChatLocal.query()
-            .where('chat_sid', sid)
-            .update({
-                video_sid: room.sid
-            })
-        return room
+        let users = await User.query().whereIn('id',[20000]).fetch()
+
+        let chatData = await Twilio.createChat(data, await User.find(1000), users)
+
+        let video = await Twilio.addVideoToChat(chatData.chat_sid, {})
+        video = await Twilio.addVideoToChat(chatData.chat_sid, {})
+        video = await Twilio.endVideoOnChat(chatData.chat_sid)
+        video = await Twilio.endVideoOnChat(chatData.chat_sid)
+        return ''
     }
 
     static async endOnChat(videoClient, chatClient, sid) {
