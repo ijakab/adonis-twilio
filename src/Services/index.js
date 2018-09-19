@@ -74,8 +74,10 @@ const TwilioService = {
         }
 
         //first, check if chat with those users exist
-        let ids = users.rows.map(user => user.id)
+        let ids = []
+        if(users) users.rows.map(user => ids.push(user.id))
         ids.push(creator.id)
+
         let record = await ChatLocal
             .query()
             .whereHas('users', q => {
