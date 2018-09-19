@@ -80,8 +80,8 @@ const TwilioService = {
 
         let record = await ChatLocal
             .query()
-            .whereHas('users', q => {
-                q.whereIn('user_id', ids)
+            .whereHas('users.user', q => {
+                q.whereIn('id', ids)
             }, '=', ids.length)
             .with('users.user')
             .first()
