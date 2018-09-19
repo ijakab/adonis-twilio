@@ -80,7 +80,7 @@ const TwilioService = {
         let record = await ChatLocal
             .query()
             .whereHas('users', q => {
-                q.whereIn('users.user_id', ids)
+                q.whereIn('twilio_users.user_id', ids)
             }, '=', ids.length)
             .with('users.user')
             .first()
@@ -143,7 +143,11 @@ const TwilioService = {
             .where('chat_id', chat.id)
             .where('user_id', user.id)
             .first()
-        if(!exists) promises.push(chat.users().attach([user.id]))
+        if(exists) return
+        promises.push(UserChat.create({
+            user_id: user.id,
+            chat_id: chat.id
+        }))
         promises.push(Chat.client(appClient).channels(chat.chat_sid).members.create({
             identity: user.id,
             dateCreated: new Date(),
@@ -155,7 +159,9 @@ const TwilioService = {
 
     async removeFromChat(chat, user) {
         await Chat.client(appClient).channels(chat.chat_sid).members(user.id).remove()
-        await chat.detach([user.id])
+        await UserChat.query()
+            .where('user_id', user.id)
+            .where('chat_id', chat.id)
     },
 
     async addVideoToChat(sid, data) {

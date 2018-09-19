@@ -6,7 +6,7 @@ class TwilioChat extends Model {
 
     //Relations
     users() {
-        return this.belongsToMany('Adonis/Twilio/TwilioUser', 'chat_id', 'user_id', 'id', 'id').pivotTable('twilio_user_chats')
+        return this.belongsToMany('Adonis/Twilio/TwilioUser', 'chat_id', 'user_id', 'id', 'user_id').pivotTable('twilio_user_chats')
     }
 }
 
