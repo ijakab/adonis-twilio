@@ -7,7 +7,7 @@ class Video extends BaseProduct {
         super()
     }
 
-    client(appClient) {
+    static client(appClient) {
         return appClient.video
     }
 
