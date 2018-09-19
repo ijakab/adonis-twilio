@@ -6,7 +6,7 @@ const api_key_secret = Env.get('TWILIO_API_KEY_SECRET')
 const service_sid = Env.get('TWILIO_SERVICE_SID')
 
 const appClient = require('twilio')(account_sid, api_key)
-const videoClient = require('twilio')(api_key_sid, api_key_secret, {
+const compositionClient = require('twilio')(api_key_sid, api_key_secret, {
     accountSid: account_sid
 })
 const AccessToken = require('twilio').jwt.AccessToken
@@ -26,7 +26,12 @@ const TwilioService = {
     },
 
     getVideoClient() {
-        return videoClient
+        return Video.client(appClient)
+    },
+
+
+    getCompositionClient() {
+        return compositionClient
     },
 
     async init() {
@@ -165,11 +170,11 @@ const TwilioService = {
     },
 
     async addVideoToChat(sid, data) {
-        return await Video.addToChat(videoClient, Chat.client(appClient), sid, data)
+        return await Video.addToChat(this.getVideoClient(), Chat.client(appClient), sid, data)
     },
 
     async endVideoOnChat(sid) {
-        return await Video.endOnChat(videoClient, Chat.client(appClient), sid)
+        return await Video.endOnChat(this.getVideoClient(), Chat.client(appClient), sid)
     },
 
     getRoleSid(role_name) {
