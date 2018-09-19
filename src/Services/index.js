@@ -82,11 +82,9 @@ const TwilioService = {
             .whereHas('users', q => {
                 q.whereIn('user_id', ids)
             }, '=', ids.length)
+            .with('users.user')
             .first()
-        if(exists) {
-            let chat = await Chat.client(appClient).channels.fetch()
-            return {record, chat}
-        }
+        if(record) return record
 
         //add information about video chat
         if (!data.attributes) data.attributes = {}
@@ -105,13 +103,17 @@ const TwilioService = {
             chat_sid: chat.sid,
             title: chat.friendlyName
         })
-        record = record.toJSON()
 
         //we also add users in parallel
         promises = users.rows.map(user => this.addToChat(record.id, user.id, 'user'))
-        promises.push(this.addToChat(record.id, creator, 'admin'))
+        promises.push(this.addToChat(record.id, creator.id, 'admin'))
+        await Promise.all(promises)
 
-        return {record, chat}
+        return record.loadMany({
+            users: builder => {
+                builder.with('user')
+            }
+        })
     },
 
     async removeChat(id) {
