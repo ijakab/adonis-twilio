@@ -137,62 +137,25 @@ const TwilioService = {
             await ChatLocal.delete()
         } catch (e) {}
     },
-
-    async inviteToChat(chat_id, user_id, role_name) {
-        let sid = (await ChatLocal.find(chat_id)).toJSON().chat_sid
-
-        await Invites.create({
-            user_id,
-            chat_id
-        })
-
-        return await Chat.client(appClient).channels(sid).invites.create({
-            identity: user_id,
-            roleSid: this.getRoleSid(role_name)
-        })
-    },
-
-    async acceptInvite(chat_id, user_id) {
-        let record = await Invites.query()
-            .where('user_id', user_id)
-            .where('chat_id', chat_id)
+    
+    async addToChat(chat, user, role_name) {
+        let promises = []
+        let exists = await chat.users()
+            .where('user_id', user.id)
             .first()
-        if (!record) return
-        await UserChat.create({
-            user_id: user_id,
-            chat_id: chat_id
-        })
-        await Invites.query().where('id', record.toJSON().id).delete()
-    },
-
-    async addToChat(chat_id, user_id, role_name) {
-        let sid = (await ChatLocal.find(chat_id)).toJSON().chat_sid
-        let promises = [
-            UserChat.create({
-                user_id: user_id,
-                chat_id: chat_id
-            }),
-            Chat.client(appClient).channels(sid).members.create({
-                identity: user_id,
-                dateCreated: new Date(),
-                dateUpdated: new Date(),
-                roleSid: this.getRoleSid(role_name)
-            })
-        ]
+        if(!exists) promises.push(chat.users().attach([user.id]))
+        promises.push(Chat.client(appClient).channels(chat.chat_sid).members.create({
+            identity: user.id,
+            dateCreated: new Date(),
+            dateUpdated: new Date(),
+            roleSid: this.getRoleSid(role_name)
+        }))
         return await Promise.all(promises)[1]
     },
 
-    async removeFromChat(chat_id, user_id) {
-        let sid = (await ChatLocal.find(chat_id)).toJSON().chat_sid
-        await Chat.client(appClient).channels(sid).members(user_id).remove()
-        await UserChat.query()
-            .where('chat_id', chat_id)
-            .where('user_id', user_id)
-            .delete()
-        await Invites.query()
-            .where('chat_id', chat_id)
-            .where('user_id', user_id)
-            .delete()
+    async removeFromChat(chat, user) {
+        await Chat.client(appClient).channels(chat.chat_sid).members(user.id).remove()
+        await chat.detach([user.id])
     },
 
     async addVideoToChat(sid, data) {
