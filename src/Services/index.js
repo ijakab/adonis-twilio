@@ -117,11 +117,12 @@ const TwilioService = {
         promises.push(this.addToChat(record.id, creator.id, 'admin'))
         await Promise.all(promises)
 
-        return record.loadMany({
+        await record.loadMany({
             users: builder => {
                 builder.with('user')
             }
         })
+        return record
     },
 
     async removeChat(id) {
