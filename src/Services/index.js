@@ -140,7 +140,8 @@ const TwilioService = {
 
     async addToChat(chat, user, role_name) {
         let promises = []
-        let exists = await chat.users()
+        let exists = await TwilioUser.query()
+            .where('chat_id', chat.id)
             .where('user_id', user.id)
             .first()
         if(!exists) promises.push(chat.users().attach([user.id]))
