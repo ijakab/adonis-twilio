@@ -81,7 +81,7 @@ const TwilioService = {
         let record = await ChatLocal
             .query()
             .whereHas('users', q => {
-                q.whereInPivot('user_id', ids)
+                q.whereIn('user_id', ids)
             }, '=', ids.length)
             .with('users.user')
             .first()
@@ -112,9 +112,9 @@ const TwilioService = {
         //we also add users in parallel
         promises = []
         if(users) {
-            users.rows.map(user => promises.push(this.addToChat(record.id, user.id, 'user')))
+            users.rows.map(user => promises.push(this.addToChat(record, user, 'user')))
         }
-        promises.push(this.addToChat(record.id, creator.id, 'admin'))
+        promises.push(this.addToChat(record, creator, 'admin'))
         await Promise.all(promises)
 
         await record.loadMany({
@@ -137,7 +137,7 @@ const TwilioService = {
             await ChatLocal.delete()
         } catch (e) {}
     },
-    
+
     async addToChat(chat, user, role_name) {
         let promises = []
         let exists = await chat.users()
