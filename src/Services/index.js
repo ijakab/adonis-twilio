@@ -6,7 +6,7 @@ const api_key_secret = Env.get('TWILIO_API_KEY_SECRET')
 const service_sid = Env.get('TWILIO_SERVICE_SID')
 
 const appClient = require('twilio')(account_sid, api_key)
-const videoClient = require(api_key_sid, api_key_secret, {
+const videoClient = require('twilio')(api_key_sid, api_key_secret, {
     accountSid: account_sid
 })
 const AccessToken = require('twilio').jwt.AccessToken
@@ -16,7 +16,6 @@ const TwilioUser = use('Adonis/Twilio/TwilioUser')
 const UserChat = use('Adonis/Twilio/UserChat')
 const ChatLocal = use('Adonis/Twilio/ChatLocal')
 const Invites = use('Adonis/Twilio/Invites')
-const User = use('App/Models/User')
 
 const Chat = use('Adonis/Twilio/Chat')
 const Video = use('Adonis/Twilio/Video')
@@ -80,7 +79,7 @@ const TwilioService = {
         let record = await ChatLocal
             .query()
             .whereHas('users', q => {
-                q.whereIn('user_id', ids)
+                q.whereInPivot('user_id', ids)
             }, '=', ids.length)
             .with('users.user')
             .first()
@@ -94,10 +93,14 @@ const TwilioService = {
         Object.assign(config, data)
 
         //to speed up, we need to do things in parallel
-        let promises = users.rows.map(user => this.createUserIfNotExist(user))
+        let promises = []
+        if(users) {
+            users.rows.map(user => promises.push(this.createUserIfNotExist(user)))
+        }
         promises.push(this.createUserIfNotExist(creator))
         promises.push(Chat.client(appClient).channels.create(config))
-        let chat = await Promise.all(promises)[ids.length] //index of create chat promise is equal to number of users, or number of promises before it
+        let res = await Promise.all(promises)
+        let chat = res[ids.length] //index of create chat promise is equal to number of users, or number of promises before it
 
         record = await ChatLocal.create({
             chat_sid: chat.sid,
@@ -105,7 +108,10 @@ const TwilioService = {
         })
 
         //we also add users in parallel
-        promises = users.rows.map(user => this.addToChat(record.id, user.id, 'user'))
+        promises = []
+        if(users) {
+            users.rows.map(user => promises.push(this.addToChat(record.id, user.id, 'user')))
+        }
         promises.push(this.addToChat(record.id, creator.id, 'admin'))
         await Promise.all(promises)
 
