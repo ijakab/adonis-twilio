@@ -15,7 +15,6 @@ const ChatGrant = AccessToken.ChatGrant
 const TwilioUser = use('Adonis/Twilio/TwilioUser')
 const UserChat = use('Adonis/Twilio/UserChat')
 const ChatLocal = use('Adonis/Twilio/ChatLocal')
-const Invites = use('Adonis/Twilio/Invites')
 
 const Chat = use('Adonis/Twilio/Chat')
 const Video = use('Adonis/Twilio/Video')
@@ -140,7 +139,7 @@ const TwilioService = {
 
     async addToChat(chat, user, role_name) {
         let promises = []
-        let exists = await TwilioUser.query()
+        let exists = await UserChat.query()
             .where('chat_id', chat.id)
             .where('user_id', user.id)
             .first()
