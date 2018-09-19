@@ -75,7 +75,7 @@ const TwilioService = {
         }
 
         //first, check if chat with those users exist
-        let ids = users.map(user => user.id)
+        let ids = users.rows.map(user => user.id)
         ids.push(creator.id)
         let record = await ChatLocal
             .query()
@@ -96,7 +96,7 @@ const TwilioService = {
         Object.assign(config, data)
 
         //to speed up, we need to do things in parallel
-        let promises = users.map(user => this.createUserIfNotExist(user))
+        let promises = users.rows.map(user => this.createUserIfNotExist(user))
         promises.push(this.createUserIfNotExist(creator))
         promises.push(Chat.client(appClient).channels.create(config))
         let chat = await Promise.all(promises)[ids.length] //index of create chat promise is equal to number of users, or number of promises before it
@@ -108,7 +108,7 @@ const TwilioService = {
         record = record.toJSON()
 
         //we also add users in parallel
-        promises = users.map(user => this.addToChat(record.id, user.id, 'user'))
+        promises = users.rows.map(user => this.addToChat(record.id, user.id, 'user'))
         promises.push(this.addToChat(record.id, creator, 'admin'))
 
         return {record, chat}
