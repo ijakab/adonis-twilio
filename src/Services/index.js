@@ -91,6 +91,16 @@ const TwilioService = {
             .first()
         if(record) return record
 
+        return await this.forceCreateChat(data, creator, user)
+    },
+
+    async forceCreateChat(data, creator, users) {
+        let config = {
+            createdBy: creator.id,
+            dateCreated: new Date(),
+            dateUpdated: new Date()
+        }
+
         //add information about video chat
         if (!data.attributes) data.attributes = {}
         else data.attributes = JSON.parse(data.attributes)
@@ -108,7 +118,7 @@ const TwilioService = {
         let res = await Promise.all(promises)
         let chat = res[ids.length] //index of create chat promise is equal to number of users, or number of promises before it
 
-        record = await ChatLocal.create({
+        let record = await ChatLocal.create({
             chat_sid: chat.sid,
             title: chat.friendlyName
         })
