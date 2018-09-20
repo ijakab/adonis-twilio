@@ -11,7 +11,7 @@ class Video extends BaseProduct {
         return appClient.video
     }
 
-    static async addToChat(videoClient, chatClient, sid, data) {
+    static async addToChat(videoClient, chatClient, sid, data = {}) {
         data.type = 'group'
         let channel = await chatClient.channels(sid).fetch()
         channel.attributes = JSON.parse(channel.attributes)
@@ -19,8 +19,10 @@ class Video extends BaseProduct {
         if(channel.attributes.video) {
             if(channel.attributes.video.sid) {
                 try {
-                    return await videoClient.rooms.fetch(channel.attributes.video.sid)
-                } catch (e) {}
+                    let existing = await videoClient.rooms(channel.attributes.video.sid).fetch()
+                    return existing
+                } catch (e) {
+                }
             }
         }
 
