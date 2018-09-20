@@ -101,6 +101,10 @@ const TwilioService = {
             dateUpdated: new Date()
         }
 
+        let ids = []
+        if(users) users.rows.map(user => ids.push(user.id))
+        ids.push(creator.id)
+
         //add information about video chat
         if (!data.attributes) data.attributes = {}
         else data.attributes = JSON.parse(data.attributes)
