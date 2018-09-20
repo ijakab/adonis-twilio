@@ -132,13 +132,18 @@ const TwilioService = {
     async removeChat(id) {
         let chat = await ChatLocal.find(id)
         try {
-            await this.endVideoOnChat(chat.sid)
+            await this.endVideoOnChat(chat.chat_sid)
         } catch (e) {}
         try {
-            await Chat.client(appClient).channels(chat.sid).remove()
+            await Chat.client(appClient).channels(chat.chat_sid).remove()
         } catch(e) {}
         try {
-            await ChatLocal.delete()
+            await UserChat.query()
+                .where('chat_id', chat.id)
+                .delete()
+        } catch (e) {}
+        try {
+            await chat.delete()
         } catch (e) {}
     },
 
