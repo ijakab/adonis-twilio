@@ -128,21 +128,25 @@ Twilio.methodName(inputs)
 | ----------- | ------ | ------ | ----------- |
 | createUser | object containing attribute *id* matching your user id and friendlyName | Twilio response | Call this to sync user. *You probably don't need this method* if you registered twilioSync trait to user model. For existing user call twilio:tools command |
 | generateToken | `user_id` id of user, `endpointId` from font-end | token | Your front-end will need this token to connect to twilio |
-| createChat | *data* any data twilio supports, *creator_id* id of user who created chat, *users* ids of users to add to chat, *not including creator* | Twilio response | Call this to create a new chat |
-| addToChat | *chat_id* your local id of chat (not twilio sid), *user_id* id of user to add, *role_name* name of twilio role. You probably want to add everyone as 'user' since you need your acl, but you can add admins if you want | Twilio response | Call this to add users to chat
-| removeFromChat | *chat_id* your local id of chat (not twilio sid), *user_id* id of user to remove | void | Removes user from chat |
+| createChat | *data* any data twilio supports, *creator_id* user object who created chat, *users* users objects to add to chat, *not including creator* | Twilio response | First, it checks if chat with provided members exist. If that is the case, returns it. Otherwise creates new |
+| addToChat | *chat* your local chat instance, *user* user instance to add, *role_name* name of twilio role. You probably want to add everyone as 'user' since you need your acl, but you can add admins if you want | Twilio response | Call this to add users to chat
+| removeFromChat | *chat* your local chat instance, *user* user instance to remove | void | Removes user from chat |
+| removeChat | *id* local id of chat to remove | Void | Removes chat and video on it |
+| createUserIfNotExist | *user* your user instance | Void | Adds user to twilio if one did not exist. You might want to call this before adding users to chat, because you don't want to pay for all users, and good portion of them will never use these services
 
 ### Videos
 
 ```javascript
 const Twilio = use('Adonis/TwilioService')
-Twilio.addVideoToChat(inputs)
+Twilio.addVideoToChat(inputs, {recordParticipantsOnConnect: true})
 Twilio.endVideoOnChat(inputs)
 ```
 
 Call these methods to add videos to chats with provided twilio sid (not local id).
 It will create new Video room. Your front-end will have to listen for changes on Channel. When video room is created, appropriate Channel will get an update to it's additional data with name of video room. Front-end will then connect to that room
 When video ends, front-end will also receive event that channel is changed, and in additional data it will get null for video, in which case it should remove call interface
+
+When creating video, it will first check if that chat already has video going on, in which case it returns it
 
 ### Models
 

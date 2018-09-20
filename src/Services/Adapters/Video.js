@@ -13,21 +13,28 @@ class Video extends BaseProduct {
 
     static async addToChat(videoClient, chatClient, sid, data) {
         data.type = 'group'
-        let room = await videoClient.rooms.create(data)
         let channel = await chatClient.channels(sid).fetch()
         channel.attributes = JSON.parse(channel.attributes)
-        if(!channel.attributes.video) {
-            channel.attributes.video = {
-                unique_name: room.unique_name,
-                sid: room.sid
+
+        if(channel.attributes.video) {
+            if(channel.attributes.video.sid) {
+                try {
+                    return await videoClient.rooms.fetch(channel.attributes.video.sid)
+                } catch (e) {}
             }
-            await chatClient.channels(sid).update({attributes: JSON.stringify(channel.attributes)})
-            await ChatLocal.query()
-                .where('chat_sid', sid)
-                .update({
-                    video_sid: room.sid
-                })
         }
+
+        let room = await videoClient.rooms.create(data)
+        channel.attributes.video = {
+            unique_name: room.unique_name,
+            sid: room.sid
+        }
+        await chatClient.channels(sid).update({attributes: JSON.stringify(channel.attributes)})
+        await ChatLocal.query()
+            .where('chat_sid', sid)
+            .update({
+                video_sid: room.sid
+            })
         return room
     }
 
