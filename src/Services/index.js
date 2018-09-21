@@ -91,7 +91,7 @@ const TwilioService = {
             .first()
         if(record) return record
 
-        return await this.forceCreateChat(data, creator, user)
+        return await this.forceCreateChat(data, creator, users)
     },
 
     async forceCreateChat(data, creator, users) {
