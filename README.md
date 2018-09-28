@@ -26,15 +26,6 @@ twilio_user() {
     return this.hasOne('Adonis/Twilio/TwilioUser')
 }
 ```
-1. *Add trait to your user model*
-Inside UserModel file (probably `app/Models/User.js`)
-```javascript
-static get traits() {
-    return [
-        '@provider:Adonis/Twilio/SyncTrait'
-    ]
-}
-```
 1. *Add computed property to your user model*
 Inside UserModel file (probably `app/Models/User.js`)
 ```javascript
@@ -62,24 +53,11 @@ Run migrations with
     ##################
     #  TWILLIO DATA  #
     ##################
-    TWILIO_ACCOUNT_SID=account_sid
-    TWILIO_TOKEN=auth_token
-    TWILIO_SERVICE=service_sid
-    TWILIO_SECRET=api_key
-```
-
-1. *Add routes*
-
-Inside `start/routes.js`
-
-```javascript
-_requireRoutes('Chat').prefix('chat')
-
-
-// --- PRIVATE
-function _requireRoutes(group) {
-    return require(`../app/Routes/${group}`)
-}
+    TWILIO_ACCOUNT_SID=Your account sid starting with AC
+    TWILIO_TOKEN=Authorization token (on dashboard it is hidden but you can click show button)
+    TWILIO_API_KEY_SID=Inside service, API key you registered (you can have multiple) SID starting with SK
+    TWILIO_API_KEY_SECRET=That string that was shown to you only once and you had to write it down... if you lost it you need new api key
+    TWILIO_SERVICE_SID=SID of service starting with SK
 ```
 
 ## Philosophy
