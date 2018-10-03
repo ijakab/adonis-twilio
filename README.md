@@ -20,6 +20,13 @@ const aceProviders = [
     //anything you have
 ]
 ```
+1. *Add config file*
+inside `config/twilio.js`
+```javascript
+module.exports = {
+    UserModel: 'App/Models/User'
+}
+```
 1. *Add relation to user model*
 ```javascript
 twilio_user() {

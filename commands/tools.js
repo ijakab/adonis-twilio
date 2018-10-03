@@ -1,6 +1,7 @@
 'use strict'
 
 const {Command} = require('@adonisjs/ace')
+const Config = use('Config')
 
 class ToolsCommand extends Command {
     /**
@@ -41,7 +42,7 @@ class ToolsCommand extends Command {
      */
     async handle() {
         const TwilioService = use('Adonis/TwilioService')
-        const User = use('App/Models/User')
+        const User = use(Config.get('twilio.UserModel'))
         const TwilioUser = use('Adonis/Twilio/TwilioUser')
 
         const choice = await this.choice('What do you want to do?',

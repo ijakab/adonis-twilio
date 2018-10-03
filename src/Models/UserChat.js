@@ -1,6 +1,7 @@
 'use strict'
 
 const Model = use('Model')
+const Config = use('Config')
 
 class UserChat extends Model {
 
@@ -10,7 +11,7 @@ class UserChat extends Model {
 
     //Relations
     user() {
-        return this.belongsTo('App/Models/User')
+        return this.belongsTo(Config.get('twilio.UserModel'))
     }
 }
 

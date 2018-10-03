@@ -1,6 +1,7 @@
 'use strict'
 const Twilio = use('Adonis/TwilioService')
-const User = use('App/Models/User')
+const Config = use('Config')
+const User = use(Config.get('twilio.UserModel'))
 const Chat = use('Adonis/Twilio/ChatLocal')
 const validator = use('Validator')
 
