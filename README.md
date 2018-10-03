@@ -4,9 +4,10 @@ As of current version, requires to be built on top of Adonis Starter (link soon)
 
 ## Installation
 1. *Install the package*
->adonis install adonis-acl-advanced
+>adonis install adonis-twilio-provider
 1. *Register a providers*
 Inside `start/app.js`
+
 ```javascript
 const providers = [
     //anything you have
@@ -20,13 +21,16 @@ const aceProviders = [
     //anything you have
 ]
 ```
+
 1. *Add config file*
 inside `config/twilio.js`
+
 ```javascript
 module.exports = {
     UserModel: 'App/Models/User'
 }
 ```
+
 1. *Add relation to user model*
 ```javascript
 twilio_user() {
