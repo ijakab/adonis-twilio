@@ -15,6 +15,7 @@ const ChatGrant = AccessToken.ChatGrant
 const TwilioUser = use('Adonis/Twilio/TwilioUser')
 const UserChat = use('Adonis/Twilio/UserChat')
 const ChatLocal = use('Adonis/Twilio/ChatLocal')
+const Service = use('Adonis/Twilio/Service')
 
 const Chat = use('Adonis/Twilio/Chat')
 const Video = use('Adonis/Twilio/Video')
@@ -199,8 +200,39 @@ const TwilioService = {
 
     getRoleSid(role_name) {
         return this.roles.find(role => role.friendlyName === `channel ${role_name}`).sid
-    }
+    },
 
+    async getServiceChat({creator, users, type, relation, forceCreation=false, data}) {
+
+        let ids = []
+        if(users) ids = users.rows.map(user => user.id)
+        if(creator) ids.push(creator.id)
+
+        if(!forceCreation) {
+            if(!type && !relation) {
+                return await this.createChat(data, creator, users)
+            } else {
+                let chat = await Chat.query()
+                    .whereHas('service', q => {
+                        q.where('type', type)
+                        q.where('relation', relation)
+                    })
+                    .whereHas('users', q => {
+                        q.whereIn('twilio_users.user_id', ids)
+                    }, '=', ids.length)
+                    .first()
+                if(chat) return chat
+            }
+        }
+
+        let chat = await this.forceCreateChat(data, creator, users)
+        if(!type && !relation) return chat
+        await Service.create({
+            type: type,
+            relation: relation
+        })
+        return chat
+    }
 }
 
 module.exports = TwilioService

@@ -1,0 +1,21 @@
+'use strict'
+
+const Schema = use('Schema')
+
+class TwilioService extends Schema {
+    up () {
+        this.create('twilio_services', (table) => {
+            table.increments()
+            table.integer('chat_sid').unsigned().references('twilio_chats.id')
+            table.string('type').notNullable()
+            table.string('relation').notNullable()
+            table.timestamps()
+        })
+    }
+
+    down () {
+        this.drop('twilio_services')
+    }
+}
+
+module.exports = TwilioService

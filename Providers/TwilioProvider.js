@@ -46,6 +46,12 @@ class TwilioProvider extends ServiceProvider {
             return Model
         })
 
+        this.app.bind('Adonis/Twilio/Service', () => {
+            let Model = require('../src/Models/TwilioService')
+            Model._bootIfNotBooted()
+            return Model
+        })
+
         //Traits
         this.app.bind('Adonis/Twilio/SyncTrait', () => {
             let Trait = require('../src/Traits/TwilioSync')
