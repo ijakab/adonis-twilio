@@ -29,7 +29,6 @@ const TwilioService = {
         return Video.client(appClient)
     },
 
-
     getCompositionClient() {
         return compositionClient
     },
@@ -39,14 +38,16 @@ const TwilioService = {
     },
 
     async createUser(data) {
+        let record = await TwilioUser.create({
+            user_id: data.id,
+            sid: 'awaiting sid'
+        })
         let res = await Chat.client(appClient).users.create({
             identity: data.id,
             friendlyName: data.friendlyName
         })
-        await TwilioUser.create({
-            user_id: data.id,
-            sid: res.sid
-        })
+        record.sid = res.sid
+        await record.save()
         return res
     },
 
