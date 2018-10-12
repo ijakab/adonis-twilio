@@ -20,6 +20,8 @@ const Service = use('Adonis/Twilio/Service')
 const Chat = use('Adonis/Twilio/Chat')
 const Video = use('Adonis/Twilio/Video')
 
+const Database = use('Database')
+
 const TwilioService = {
 
     getClient() {
@@ -39,16 +41,26 @@ const TwilioService = {
     },
 
     async createUser(data) {
+        const thrx = await Database.beginTransaction()
+
         let record = await TwilioUser.create({
             user_id: data.id,
             sid: 'awaiting sid'
-        })
-        let res = await Chat.client(appClient).users.create({
-            identity: data.id,
-            friendlyName: data.friendlyName
-        })
+        }, thrx)
+        try {
+            let res = await Chat.client(appClient).users.create({
+                identity: data.id,
+                friendlyName: data.friendlyName
+            })
+        } catch (e) {
+            thrx.rollback()
+            let er = new Error()
+            er.staus = 502
+            throw er
+        }
         record.sid = res.sid
-        await record.save()
+        await record.save(thrx)
+        await thrx.commit()
         return res
     },
 
