@@ -47,8 +47,9 @@ const TwilioService = {
             user_id: data.id,
             sid: 'awaiting sid'
         }, thrx)
+        let res
         try {
-            let res = await Chat.client(appClient).users.create({
+            res = await Chat.client(appClient).users.create({
                 identity: data.id,
                 friendlyName: data.friendlyName
             })
