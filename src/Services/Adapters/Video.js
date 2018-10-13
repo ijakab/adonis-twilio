@@ -1,6 +1,6 @@
-const Env = use('Env')
 const BaseProduct = use('Adonis/Twilio/BaseProducts')
-const ChatLocal = use('Adonis/Twilio/ChatLocal')
+const Config = use('Config')
+const ChatLocal = use(Config.get('twilio.ChatModel'))
 
 class Video extends BaseProduct {
     constructor() {

@@ -11,7 +11,7 @@ class TwilioUser extends Model {
     }
 
     chats() {
-        return this.belongsToMany('Adonis/Twilio/ChatLocal', 'user_id', 'chat_id', 'user_id', 'id').pivotTable('twilio_user_chats')
+        return this.belongsToMany(Config.get('twilio.ChatModel'), 'user_id', 'chat_id', 'user_id', 'id').pivotTable('twilio_user_chats')
     }
 
 }

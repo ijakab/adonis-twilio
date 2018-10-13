@@ -12,10 +12,11 @@ const compositionClient = require('twilio')(api_key_sid, api_key_secret, {
 const AccessToken = require('twilio').jwt.AccessToken
 const ChatGrant = AccessToken.ChatGrant
 
+const Config = use('Config')
 const TwilioUser = use('Adonis/Twilio/TwilioUser')
 const UserChat = use('Adonis/Twilio/UserChat')
-const ChatLocal = use('Adonis/Twilio/ChatLocal')
-const Service = use('Adonis/Twilio/Service')
+const ChatLocal = use(Config.get('twilio.ChatModel'))
+const Service = use(Config.get('twilio.ServiceModel'))
 
 const Chat = use('Adonis/Twilio/Chat')
 const Video = use('Adonis/Twilio/Video')

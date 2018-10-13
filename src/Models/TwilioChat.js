@@ -1,6 +1,7 @@
 'use strict'
 
 const Model = use('Model')
+const Config = use('Config')
 
 class TwilioChat extends Model {
 
@@ -10,7 +11,7 @@ class TwilioChat extends Model {
     }
 
     service() {
-        return this.hasOne('Adonis/Twilio/Service')
+        return this.hasOne(Config.get('twilio.ServiceModel'))
     }
 }
 
