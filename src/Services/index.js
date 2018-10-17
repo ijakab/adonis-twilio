@@ -42,27 +42,14 @@ const TwilioService = {
     },
 
     async createUser(data) {
-        const thrx = await Database.beginTransaction()
-
-        let record = await TwilioUser.create({
+        let res = await Chat.client(appClient).users.create({
+            identity: data.id,
+            friendlyName: data.friendlyName
+        })
+        await TwilioUser.create({
             user_id: data.id,
-            sid: 'awaiting sid'
-        }, thrx)
-        let res
-        try {
-            res = await Chat.client(appClient).users.create({
-                identity: data.id,
-                friendlyName: data.friendlyName
-            })
-        } catch (e) {
-            thrx.rollback()
-            let er = new Error()
-            er.staus = 502
-            throw er
-        }
-        record.sid = res.sid
-        await record.save(thrx)
-        await thrx.commit()
+            sid: res.sid
+        })
         return res
     },
 
@@ -87,15 +74,9 @@ const TwilioService = {
     },
 
     async createChat(data, creator, users) {
-        let config = {
-            createdBy: creator.id,
-            dateCreated: new Date(),
-            dateUpdated: new Date()
-        }
-
         //first, check if chat with those users exist
         let ids = []
-        if(users) users.rows.map(user => ids.push(user.id))
+        if(users && users-length) ids = users.rows.map(user => user.id)
         ids.push(creator.id)
 
         let record = await ChatLocal
@@ -112,13 +93,12 @@ const TwilioService = {
 
     async forceCreateChat(data, creator, users) {
         let config = {
-            createdBy: creator.id,
             dateCreated: new Date(),
             dateUpdated: new Date()
         }
 
         let ids = []
-        if(users) users.rows.map(user => ids.push(user.id))
+        if(users && users.length) ids = users.rows.map(user => user.id)
         ids.push(creator.id)
 
         //add information about video chat
@@ -134,8 +114,8 @@ const TwilioService = {
             users.rows.map(user => promises.push(this.createUserIfNotExist(user)))
         }
         promises.push(this.createUserIfNotExist(creator))
-        promises.push(Chat.client(appClient).channels.create(config))
         let res = await Promise.all(promises)
+        await Chat.client(appClient).channels.create(config)
         let chat = res[ids.length] //index of create chat promise is equal to number of users, or number of promises before it
 
         let record = await ChatLocal.create({
