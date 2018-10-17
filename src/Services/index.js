@@ -76,7 +76,7 @@ const TwilioService = {
     async createChat(data, creator, users) {
         //first, check if chat with those users exist
         let ids = []
-        if(users && users-length) ids = users.rows.map(user => user.id)
+        if(users) ids = users.rows.map(user => user.id)
         ids.push(creator.id)
 
         let record = await ChatLocal
@@ -98,7 +98,7 @@ const TwilioService = {
         }
 
         let ids = []
-        if(users && users.length) ids = users.rows.map(user => user.id)
+        if(users) ids = users.rows.map(user => user.id)
         ids.push(creator.id)
 
         //add information about video chat
